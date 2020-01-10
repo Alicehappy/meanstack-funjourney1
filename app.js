@@ -4,12 +4,18 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const config = require('./config/database');
+const bucketlist = require('./controllers/bucketlist');
 
-// Initialize app variable
-const app = express();
+// Connect mongoose to our database
+//mongoose.connect(config.database);
+mongoose.connect('mongodb://localhost:27017/bucketlist', {useMongoClient: true});
 
 // Declaring port
 const port = 3000;
+
+// Initialize app variable
+const app = express();
 
 // Middleware for CORS
 app.use(cors());
@@ -27,8 +33,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
     res.send("Invalid page");
+
 })
 
+// Routing all HTTP requests to /bucketlist to bucketlist contrller
+app.use('/bucketlist', bucketlist);
 
 
 // Listen to port 3000
